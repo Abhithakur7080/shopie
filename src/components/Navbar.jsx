@@ -31,7 +31,7 @@ const Navbar = ({ handleSearch }) => {
           className="w-4/5 mx-auto flex items-center justify-between no-underline"
         >
           {/* logo block */}
-          <div className="py-8 flex gap-2 items-center">
+          <div className="py-5 flex gap-2 items-center">
             <div>
               <icons.FaShopify className="text-blue-600" size={"2rem"} />
             </div>
@@ -40,7 +40,7 @@ const Navbar = ({ handleSearch }) => {
             </h1>
           </div>
           {/* search block */}
-          <div className="w-1/3 flex overflow-hidden border-4 border-blue-500">
+          <div className="hidden md:w-1/3 md:flex overflow-hidden border-4 border-blue-500">
             <input
               type="text"
               value={search}
@@ -117,7 +117,7 @@ const Navbar = ({ handleSearch }) => {
               <li>
                 <Link
                   className="no-underline text-black transition-all hover:text-blue-600"
-                  to={"/About"}
+                  to={"/about"}
                 >
                   About
                 </Link>

@@ -6,13 +6,20 @@ import {
   Products,
 } from "../components/home";
 
-const Homepage = () => {
+const Homepage = ({ open, setOpen, detail, setDetail, viewDetail, addToCart }) => {
   return (
     <>
       <Banner />
       <ProductType />
       <About />
-      <Products />
+      <Products
+        open={open}
+        setOpen={setOpen}
+        detail={detail}
+        setDetail={setDetail}
+        viewDetail={viewDetail}
+        addToCart={addToCart}
+      />
       <Banner1 />
     </>
   );

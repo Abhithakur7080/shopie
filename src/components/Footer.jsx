@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { icons } from "../assets";
 
 const Footer = () => {
@@ -60,13 +61,13 @@ const Footer = () => {
           <h3 className="font-bold text-blue-600 text-2xl">Pages</h3>
           <ul className="mt-3 ml-5">
             <li className="mt-2 text-neutral-800 text-lg transition-all duration-500 hover:text-blue-400 cursor-pointer list-disc">
-              Home
+              <Link to={"/"}>Home</Link>
             </li>
             <li className="mt-2 text-neutral-800 text-lg transition-all duration-500 hover:text-blue-400 cursor-pointer list-disc">
-              About
+              <Link to={"/about"}>About</Link>
             </li>
             <li className="mt-2 text-neutral-800 text-lg transition-all duration-500 hover:text-blue-400 cursor-pointer list-disc">
-              Contact
+              <Link to={"/contact"}>Contact</Link>
             </li>
             <li className="mt-2 text-neutral-800 text-lg transition-all duration-500 hover:text-blue-400 cursor-pointer list-disc">
               Term & Condition

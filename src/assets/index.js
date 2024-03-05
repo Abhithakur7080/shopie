@@ -15,13 +15,14 @@ import { AiOutlineUser, AiOutlineShoppingCart, AiOutlineHeart, AiOutlineInstagra
 import { BsBagCheck, BsEye, BsArrowRight, BsCurrencyDollar, BsYoutube } from "react-icons/bs";
 import { BiHeadphone } from "react-icons/bi";
 import { CiLogin, CiLogout, CiDollar } from "react-icons/ci";
-import { FaTruck, FaShopify } from "react-icons/fa";
+import { FaTruck, FaShopify, FaPlus, FaMinus } from "react-icons/fa";
 import { FiTruck } from "react-icons/fi";
 import { FcBusinessman, FcBusinesswoman, FcCamcorderPro  } from "react-icons/fc";
-import { GiJewelCrown } from "react-icons/gi";
+import { GiJewelCrown, GiShoppingCart } from "react-icons/gi";
 import { GrPowerReset } from "react-icons/gr";
 import { HiOutlineReceiptPercent } from "react-icons/hi2";
 import { RiFacebookFill } from 'react-icons/ri'
+import { RxCross1 } from 'react-icons/rx'
 
 const categoryImage = [
   { name: "phone", src: phone, qty: 20 },
@@ -48,13 +49,17 @@ const icons = {
   FiTruck,
   FaTruck,
   FaShopify,
+  FaPlus,
+  FaMinus,
   FcBusinessman,
   FcBusinesswoman,
   FcCamcorderPro,
   GiJewelCrown,
+  GiShoppingCart,
   GrPowerReset,
   HiOutlineReceiptPercent,
   RiFacebookFill,
+  RxCross1,
 };
 
 const aboutInfo = [
@@ -81,6 +86,12 @@ const titleCase = (text) => {
     })
     .join(" ");
 };
+const truncktext = (text) => {
+  if (text.length > 30) {
+    return text.slice(0, 30) + "...";
+  } else {
+    return text;
+  }
+};
 
-
-export { categoryImage, icons, aboutInfo, titleCase, productData, banner1, banner2 };
+export { categoryImage, icons, aboutInfo, titleCase, truncktext, productData, banner1, banner2 };
