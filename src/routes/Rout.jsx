@@ -4,6 +4,8 @@ import Detail from "../pages/Detail";
 import Cartpage from '../pages/Cartpage'
 import Contactpage from '../pages/Contactpage'
 import Aboutpage from "../pages/Aboutpage";
+import Loginpage from "../pages/Loginpage";
+import Signuppage from "../pages/Signuppage";
 
 const Rout = ({
   products,
@@ -53,6 +55,8 @@ const Rout = ({
         <Route path={'/cart'} element={<Cartpage cart={cart} setCart={setCart}/>}/>
         <Route path={'/contact'} element={<Contactpage/>}/>
         <Route path={'/about'} element={<Aboutpage/>}/>
+        <Route path={'/login'} element={<Loginpage/>}/>
+        <Route path={'/signup'} element={<Signuppage/>}/>
       </Routes>
     </>
   );

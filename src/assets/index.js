@@ -15,7 +15,7 @@ import { AiOutlineUser, AiOutlineShoppingCart, AiOutlineHeart, AiOutlineInstagra
 import { BsBagCheck, BsEye, BsArrowRight, BsCurrencyDollar, BsYoutube } from "react-icons/bs";
 import { BiHeadphone } from "react-icons/bi";
 import { CiLogin, CiLogout, CiDollar } from "react-icons/ci";
-import { FaTruck, FaShopify, FaPlus, FaMinus } from "react-icons/fa";
+import { FaTruck, FaShopify, FaPlus, FaMinus, FaEye, FaRegEyeSlash, FaTwitter } from "react-icons/fa";
 import { FiTruck } from "react-icons/fi";
 import { FcBusinessman, FcBusinesswoman, FcCamcorderPro  } from "react-icons/fc";
 import { GiJewelCrown, GiShoppingCart } from "react-icons/gi";
@@ -48,9 +48,12 @@ const icons = {
   CiDollar,
   FiTruck,
   FaTruck,
+  FaTwitter,
   FaShopify,
   FaPlus,
   FaMinus,
+  FaEye,
+  FaRegEyeSlash,
   FcBusinessman,
   FcBusinesswoman,
   FcCamcorderPro,
