@@ -12,7 +12,7 @@ const Loginpage = () => {
   const [password, setPassword] = useState("");
   const firebase = useFirebase();
   const handleSubmit = async () => {
-    const { user } = await firebase.loginUserWithEmailAndPassword(email, password);
+    await firebase.loginUserWithEmailAndPassword(email, password);
   };
   return (
     <div className="w-screen h-fit">
@@ -57,7 +57,7 @@ const Loginpage = () => {
             <p className="mx-4 text-gray-500">OR</p>
             <hr className="w-1/4 border-gray-300" />
           </div>
-          <GoogleSignInButton />
+          <GoogleSignInButton onClick={firebase.signInWithGoogle} />
         </form>
         <div className="hidden md:block md:w-1/2 slide-left">
           <img

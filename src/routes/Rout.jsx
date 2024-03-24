@@ -21,7 +21,7 @@ const Rout = ({
   addToCart,
 }) => {
   return (
-    <>
+    <div className="mt-60 md:mt-52">
       <Routes>
         <Route
           path="/"
@@ -58,7 +58,7 @@ const Rout = ({
         <Route path={'/login'} element={<Loginpage/>}/>
         <Route path={'/signup'} element={<Signuppage/>}/>
       </Routes>
-    </>
+    </div>
   );
 };
 

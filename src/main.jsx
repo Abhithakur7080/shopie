@@ -8,10 +8,10 @@ import { Toaster } from "react-hot-toast";
 import { FirebaseProvider } from "./config/firebaseinit.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <FirebaseProvider>
-    <BrowserRouter>
+  <BrowserRouter>
+    <FirebaseProvider>
       <App />
       <Toaster />
-    </BrowserRouter>
-   </FirebaseProvider>
+    </FirebaseProvider>
+  </BrowserRouter>
 );

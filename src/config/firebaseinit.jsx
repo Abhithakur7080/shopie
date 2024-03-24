@@ -1,5 +1,6 @@
 //get all needed react hooks
 import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 //get inititalized database
 import { initializeApp } from "firebase/app";
 //authentication
@@ -12,6 +13,7 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 //firestore database
 import {
@@ -56,6 +58,7 @@ export const useFirebase = () => useContext(FirebaseContext);
 export const FirebaseProvider = (props) => {
   //get user state
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   //user authentication signup
   const signupUserWithEmailAndPassword = async (email, password) => {
     const userCrediential = await createUserWithEmailAndPassword(
@@ -67,12 +70,16 @@ export const FirebaseProvider = (props) => {
   };
   //user authentication signin
   const loginUserWithEmailAndPassword = async (email, password) => {
-    return await signInWithEmailAndPassword(firebaseAuth, email, password);
+    const userCrediential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+    return userCrediential;
   };
   //user signin with google
   const signInWithGoogle = async () => {
     const googleProvider = new GoogleAuthProvider();
     await signInWithRedirect(firebaseAuth, googleProvider);
+  };
+  const logoutUser = async () => {
+    await signOut(firebaseAuth);
   };
   //update authenticated user data
   const updateAuthenticatedUserData = async (updateData) => {
@@ -149,6 +156,7 @@ export const FirebaseProvider = (props) => {
         console.log("you are logged out");
         setUser(null);
       }
+      navigate('/')
     });
   }, []);
   return (
@@ -160,6 +168,7 @@ export const FirebaseProvider = (props) => {
         updateAuthenticatedUserData,
         sentUserEmailVerification,
         signInWithGoogle,
+        logoutUser,
         //realtime database
         putData,
         //currentUser

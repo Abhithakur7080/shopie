@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { icons } from "../../assets";
-//import auth0 hooks
-import { useAuth0 } from "@auth0/auth0-react";
+import { useFirebase } from "../../config/firebaseinit";
 
 const Cart = ({ cart, setCart }) => {
-  const { loginWithRedirect, isAuthenticated } = useAuth0();
-  if (!isAuthenticated) {
-    return loginWithRedirect();
+  const { user } = useFirebase();
+  if(!user){
+    return <Navigate to={"/login"} replace/>
   }
   //increase quantity
   const increment = (product) => {
