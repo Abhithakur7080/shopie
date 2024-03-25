@@ -1,7 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { productData, icons, truncktext, titleCase } from "../../assets";
+import { useFirebase } from "../../config/firebaseinit";
 import ProductDetail from "../details/ProductDetail";
-//import auth0 hooks
-import { useAuth0 } from "@auth0/auth0-react";
 
 const Products = ({
   detail,
@@ -11,7 +11,8 @@ const Products = ({
   setOpen,
   addToCart,
 }) => {
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  const { user } = useFirebase();
+  const navigate = useNavigate();
   return (
     <>
       {open && (
@@ -37,23 +38,21 @@ const Products = ({
                   className="group-hover:scale-90 transition-all duration-700 max-w-24 max-h-24 md:max-w-36 md:max-h-32 m-auto cursor-pointer"
                 />
                 <div className="absolute top-1 -right-16 transition-all duration-1000 group-hover:-right-2 z-10">
-                  {
-                    isAuthenticated?(
-                      <li
-                    onClick={() => addToCart(item)}
-                    className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
-                  >
-                    <icons.AiOutlineShoppingCart />
-                  </li>
-                    ):(
-                      <li
-                    onClick={() => loginWithRedirect()}
-                    className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
-                  >
-                    <icons.AiOutlineShoppingCart />
-                  </li>
-                    )
-                  }
+                  {user ? (
+                    <li
+                      onClick={() => addToCart(item)}
+                      className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
+                    >
+                      <icons.AiOutlineShoppingCart />
+                    </li>
+                  ) : (
+                    <li
+                      onClick={() => navigate("/cart")}
+                      className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
+                    >
+                      <icons.AiOutlineShoppingCart />
+                    </li>
+                  )}
                   <li
                     onClick={() => viewDetail(item)}
                     className="list-none px-3 py-3 rounded-md text-green-700 cursor-pointer transition-all duration-300 hover:bg-green-700 hover:text-white shadow-md"

@@ -1,8 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { icons, titleCase, truncktext } from "../../assets";
+import { useFirebase } from "../../config/firebaseinit";
 import ProductDetail from "./ProductDetail";
-//import auth0 hooks
-import { useAuth0 } from "@auth0/auth0-react";
-
 const Product = ({
   products,
   handleCatagory,
@@ -13,7 +12,8 @@ const Product = ({
   setOpen,
   addToCart
 }) => {
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  const { user } = useFirebase()
+  const navigate = useNavigate()
   return (
     <>
       {open && (
@@ -83,7 +83,7 @@ const Product = ({
                     />
                     <div className="absolute top-1 -right-16 transition-all duration-1000 group-hover:-right-2 z-10">
                     {
-                    isAuthenticated?(
+                    user?(
                       <li
                     onClick={() => addToCart(item)}
                     className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
@@ -92,7 +92,7 @@ const Product = ({
                   </li>
                     ):(
                       <li
-                    onClick={() => loginWithRedirect()}
+                    onClick={() => navigate("/cart")}
                     className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
                   >
                     <icons.AiOutlineShoppingCart />

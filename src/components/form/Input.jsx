@@ -5,6 +5,7 @@ function Input({
   label = "",
   type = "text",
   id = "",
+  name="",
   value = "",
   setValue = () => {},
 }) {
@@ -35,7 +36,7 @@ function Input({
             ? "text-sm -top-1 left-2 -translate-y-2 text-gray-500 bg-white"
             : ""
         }`}
-        htmlFor="input"
+        htmlFor={id}
       >
         Enter your {label}
       </label>

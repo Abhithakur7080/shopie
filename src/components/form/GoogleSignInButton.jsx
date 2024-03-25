@@ -5,7 +5,7 @@ const GoogleSignInButton = ({ onClick = () => {} }) => {
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center justify-center bg-white border border-gray-300 rounded-lg shadow-md  px-6 py-4 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+      className="flex border-transparent items-center justify-center bg-white border border-gray-300 rounded-lg shadow-md  px-6 py-4 text-sm font-medium text-gray-800 hover:bg-gray-200"
     >
       <svg className="h-6 w-6 mr-2" viewBox="-0.5 0 48 48" version="1.1">
         <g

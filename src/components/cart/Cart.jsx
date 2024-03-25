@@ -1,10 +1,12 @@
 import { Link, Navigate } from "react-router-dom";
 import { icons } from "../../assets";
 import { useFirebase } from "../../config/firebaseinit";
+import toast from "react-hot-toast";
 
 const Cart = ({ cart, setCart }) => {
   const { user } = useFirebase();
   if(!user){
+    toast.error("Please login first to continue.")
     return <Navigate to={"/login"} replace/>
   }
   //increase quantity
