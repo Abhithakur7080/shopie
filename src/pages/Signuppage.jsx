@@ -6,47 +6,70 @@ import Button from "../components/form/Button";
 import { Link } from "react-router-dom";
 import GoogleSignInButton from "../components/form/GoogleSignInButton";
 import { useFirebase } from "../config/firebaseinit";
+import toast from "react-hot-toast";
 
 const Signuppage = () => {
-  const [fullname, setFullname] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  //create initial user data
+  const [userData, setUserData] = useState({
+    fullname: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState([]);
+
+  const data = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setUserData({ ...userData, [name]: value });
+  };
   //firebase hooks
   const firebase = useFirebase();
 
   //on signup function
   const handleSubmit = async () => {
-    // await firebase.sentUserEmailVerification();
+    if (!userData.fullname) setErrors((prev) => [...prev, "fullname"]);
+    if (!userData.email) setErrors((prev) => [...prev, "email"]);
+    if (!userData.password) setErrors((prev) => [...prev, "password"]);
+    if (!userData.phone) setErrors((prev) => [...prev, "phone"]);
+    if (!userData.confirmPassword) {
+      setErrors((prev) => [...prev, "confirmPassword"]);
+    }
+    console.log(errors.length);
+    if (errors.length > 0) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+    if (userData.password !== userData.confirmPassword) {
+      setErrors(["password", "confirmPassword"]);
+      toast.error("password not matched");
+      return;
+    }
+    console.log("object");
     //sign up process
     const { user } = await firebase.signupUserWithEmailAndPassword(
-      email,
-      password
+      userData.email,
+      userData.password
     );
     //update to realtime database
-    await firebase.putData("users/" + user.uid, { email, phone, fullname });
-    //update information
-    const updateData = {
-      displayName: fullname,
-      phoneNumber: phone,
-    };
+    await firebase.putData("users/" + user.uid, {
+      fullname: userData.fullname,
+      email: userData.email,
+      phone: userData.phone,
+    });
     //update to authentication profile
-    await firebase.updateAuthenticatedUserData(updateData);
-    const userData = {
-      displayName: fullname,
-      email: email,
-      phoneNumber: phone,
+    await firebase.updateAuthenticatedUserData({
+      displayName: userData.fullname,
+    });
+    const updateData = {
+      displayName: userData.userData,
+      email: userData.email,
+      phoneNumber: userData.phone,
       role: "user",
     };
-
-    await firebase.setDataToFirestoreRef("users", user.uid, userData);
-    const userData2 = await firebase.getADocsFromFirestore("users", user.uid)
-    console.log("set doc=",userData2);
-    const userData3 = await firebase.getMultipleDocsFromFirestore("users", "role", "user")
-    console.log("user docs=",userData3);
-    const userData4 = await firebase.getAllDocsFromFirestore("users")
-    console.log("all docs=",userData4);
+    //update data to cloud firestore also
+    await firebase.setDataToFirestoreRef("users", user.uid, updateData);
   };
   return (
     <div className="w-screen h-fit">
@@ -60,36 +83,51 @@ const Signuppage = () => {
             label="fullname"
             type="text"
             id="fullname"
-            value={fullname}
-            setValue={setFullname}
+            name="fullname"
+            value={userData.fullname}
+            onChange={data}
+            errors={errors}
+            setErrors={setErrors}
           />
           <Input
             label="email"
             type="email"
             id="email"
-            value={email}
-            setValue={setEmail}
+            name="email"
+            value={userData.email}
+            onChange={data}
+            errors={errors}
+            setErrors={setErrors}
           />
           <Input
             label="phone number"
             type="text"
             id="phone"
-            value={phone}
-            setValue={setPhone}
+            name="phone"
+            value={userData.phone}
+            onChange={data}
+            errors={errors}
+            setErrors={setErrors}
           />
           <Input
             label="password"
             type="password"
             id="password"
-            value={password}
-            setValue={setPassword}
+            name="password"
+            value={userData.password}
+            onChange={data}
+            errors={errors}
+            setErrors={setErrors}
           />
           <Input
             label="confirm password"
             type="password"
             id="confirm-password"
-            value={confirmPassword}
-            setValue={setConfirmPassword}
+            name="confirmPassword"
+            value={userData.confirmPassword}
+            onChange={data}
+            errors={errors}
+            setErrors={setErrors}
           />
           <label>
             <input type="checkbox" className="mr-2" />

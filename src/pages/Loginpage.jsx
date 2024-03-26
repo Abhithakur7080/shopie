@@ -8,11 +8,21 @@ import GoogleSignInButton from "../components/form/GoogleSignInButton";
 import { useFirebase } from "../config/firebaseinit";
 
 const Loginpage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  //create initial data
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+  });
+  //set data
+  const data = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setUserData({ ...userData, [name]: value });
+  };
   const firebase = useFirebase();
+  //submit data
   const handleSubmit = async () => {
-    await firebase.loginUserWithEmailAndPassword(email, password);
+    await firebase.loginUserWithEmailAndPassword(userData.email, userData.password);
   };
   return (
     <div className="w-screen h-fit">
@@ -21,20 +31,22 @@ const Loginpage = () => {
           className="w-full md:w-1/2 flex item-center flex-col p-5 gap-4 slide-right"
           onSubmit={handleSubmit}
         >
-          <Logo title={"Login"}/>
+          <Logo title={"Login"} />
           <Input
             label="email"
             type="email"
             id="email"
-            value={email}
-            setValue={setEmail}
+            name="email"
+            value={userData.email}
+            onChange={data}
           />
           <Input
             label="password"
             type="password"
             id="password"
-            value={password}
-            setValue={setPassword}
+            name="password"
+            value={userData.password}
+            onChange={data}
           />
           <label>
             <input type="checkbox" className="mr-2" />

@@ -29,10 +29,9 @@ const Contact = () => {
     }
   }, [user]);
   //setting user data
-  let name, value;
   const data = (e) => {
-    name = e.target.name;
-    value = e.target.value;
+    let name = e.target.name;
+    let value = e.target.value;
     setUserData({ ...userData, [name]: value });
   };
   const sendData = ()=>{
