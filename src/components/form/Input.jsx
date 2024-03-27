@@ -8,7 +8,6 @@ const Input = ({
   name = "",
   value = "",
   onChange = () => {},
-  setErrors = () => {},
   errors = [],
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -30,8 +29,6 @@ const Input = ({
     if (errors.length>0 && (errors.indexOf(name) != -1 || value.length === 0)) {
       setError(true);
     } else {
-      // const filteredError = errors.filter((err) => err !== name);
-      // setErrors(filteredError);
       setError(false);
     }
   }, [errors, error]);

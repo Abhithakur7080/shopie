@@ -19,10 +19,23 @@ const Loginpage = () => {
     let value = e.target.value;
     setUserData({ ...userData, [name]: value });
   };
+  const [errors, setErrors] = useState([]);
   const firebase = useFirebase();
   //submit data
   const handleSubmit = async () => {
-    await firebase.loginUserWithEmailAndPassword(userData.email, userData.password);
+    let newErrors = [];
+    if (!userData.email) newErrors.push("email");
+    if (!userData.password) newErrors.push("password");
+    if (newErrors.length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+    await firebase.loginUserWithEmailAndPassword(
+      userData.email,
+      userData.password
+    );
+    setErrors([]);
   };
   return (
     <div className="w-screen h-fit">
@@ -39,6 +52,7 @@ const Loginpage = () => {
             name="email"
             value={userData.email}
             onChange={data}
+            errors={errors}
           />
           <Input
             label="password"
@@ -47,6 +61,7 @@ const Loginpage = () => {
             name="password"
             value={userData.password}
             onChange={data}
+            errors={errors}
           />
           <label>
             <input type="checkbox" className="mr-2" />

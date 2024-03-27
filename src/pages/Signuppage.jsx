@@ -16,6 +16,7 @@ const Signuppage = () => {
     phone: "",
     password: "",
     confirmPassword: "",
+    termsCondition: false,
   });
   const [errors, setErrors] = useState([]);
 
@@ -29,15 +30,14 @@ const Signuppage = () => {
 
   //on signup function
   const handleSubmit = async () => {
-    if (!userData.fullname) setErrors((prev) => [...prev, "fullname"]);
-    if (!userData.email) setErrors((prev) => [...prev, "email"]);
-    if (!userData.password) setErrors((prev) => [...prev, "password"]);
-    if (!userData.phone) setErrors((prev) => [...prev, "phone"]);
-    if (!userData.confirmPassword) {
-      setErrors((prev) => [...prev, "confirmPassword"]);
-    }
-    console.log(errors.length);
-    if (errors.length > 0) {
+    let newErrors = [];
+    if (!userData.fullname) newErrors.push("fullname");
+    if (!userData.email) newErrors.push("email");
+    if (!userData.password) newErrors.push("password");
+    if (!userData.phone) newErrors.push("phone");
+    if (!userData.confirmPassword) newErrors.push("confirmPassword");
+    if (newErrors.length > 0) {
+      setErrors(newErrors);
       toast.error("Please fill in all required fields.");
       return;
     }
@@ -46,7 +46,10 @@ const Signuppage = () => {
       toast.error("password not matched");
       return;
     }
-    console.log("object");
+    if (!userData.termsCondition) {
+      toast.error("please accept terms and conditions.");
+      return;
+    }
     //sign up process
     const { user } = await firebase.signupUserWithEmailAndPassword(
       userData.email,
@@ -63,13 +66,15 @@ const Signuppage = () => {
       displayName: userData.fullname,
     });
     const updateData = {
-      displayName: userData.userData,
+      displayName: userData.fullname,
       email: userData.email,
       phoneNumber: userData.phone,
       role: "user",
     };
     //update data to cloud firestore also
     await firebase.setDataToFirestoreRef("users", user.uid, updateData);
+    //at last all errors should be empty
+    setErrors([]);
   };
   return (
     <div className="w-screen h-fit">
@@ -87,7 +92,6 @@ const Signuppage = () => {
             value={userData.fullname}
             onChange={data}
             errors={errors}
-            setErrors={setErrors}
           />
           <Input
             label="email"
@@ -97,7 +101,6 @@ const Signuppage = () => {
             value={userData.email}
             onChange={data}
             errors={errors}
-            setErrors={setErrors}
           />
           <Input
             label="phone number"
@@ -107,7 +110,6 @@ const Signuppage = () => {
             value={userData.phone}
             onChange={data}
             errors={errors}
-            setErrors={setErrors}
           />
           <Input
             label="password"
@@ -117,7 +119,6 @@ const Signuppage = () => {
             value={userData.password}
             onChange={data}
             errors={errors}
-            setErrors={setErrors}
           />
           <Input
             label="confirm password"
@@ -127,10 +128,16 @@ const Signuppage = () => {
             value={userData.confirmPassword}
             onChange={data}
             errors={errors}
-            setErrors={setErrors}
           />
           <label>
-            <input type="checkbox" className="mr-2" />
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={userData.termsCondition}
+              onChange={(e) =>
+                setUserData({ ...userData, termsCondition: e.target.checked })
+              }
+            />
             Please accept our{" "}
             <Link className="text-blue-600">Terms and conditions</Link>
           </label>
