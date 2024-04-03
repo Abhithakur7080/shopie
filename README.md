@@ -1,4 +1,4 @@
-<h1 align="center" style="font-size: 36px;">SHOPIE</h1>
+<h1 align="center" style="font-size: 36px;"><img src="https://github.com/Abhithakur7080/shopie/assets/119639453/c7f37282-16b7-40f6-9cef-3132146fc458" width=30/> SHOPIE</h1>
 
 # Welcome to shopie!
 
