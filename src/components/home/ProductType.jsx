@@ -4,7 +4,8 @@ const ProductType = () => {
   return (
     <div className="py-8 px-10 w-full">
       <div className="max-w-full flex justify-between gap-3 flex-wrap">
-        {categoryImage.map(({ name, src, qty }) => (
+        {/* all default catagories map */}
+        {categoryImage.map(({ name, src, productname }) => (
           <div key={name} className="py-3 px-5 slide-top group">
             <div className="w-24 h-24 md:w-52 md:h-52 rounded-full bg-blue-50 overflow-hidden flex items-center justify-center shadow-lg cursor-pointer">
               <img
@@ -14,7 +15,7 @@ const ProductType = () => {
               />
             </div>
             <div className="max-w-full text-center">
-              <p className="mt-3 text-blue-300">{qty} products</p>
+              <p className="mt-3 text-blue-300">{productname}</p>
             </div>
           </div>
         ))}

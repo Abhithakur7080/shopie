@@ -1,48 +1,33 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { icons } from "../../assets";
-import { useFirebase } from "../../config/firebaseinit";
-import toast from "react-hot-toast";
+import { useAuthContext } from "../../redux/AuthProvider";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  cartSelector,
+  decreaseQTY,
+  deleteFromCart,
+  fetchAllcarts,
+  increaseQTY,
+} from "../../redux/Reducer/cartReducer";
+import { checkoutOrders } from "../../redux/Reducer/orderReducer";
 
-const Cart = ({ cart, setCart }) => {
-  const { user } = useFirebase();
-  if(!user){
-    toast.error("Please login first to continue.")
-    return <Navigate to={"/login"} replace/>
-  }
+const Cart = () => {
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { carts, total } = useSelector(cartSelector);
+  const checkout = () => {
+    dispatch(checkoutOrders(user.uid));
+    navigate("/order");
+  };
   //increase quantity
-  const increment = (product) => {
-    const exist = cart.find((item) => item.id === product.id);
-    setCart(
-      cart.map((item) =>
-        item.id === product.id ? { ...exist, qty: exist.qty + 1 } : item
-      )
-    );
-  };
-  const remove = (product) => {
-    const exist = cart.find((item) => item.id === product.id);
-    console.log(exist, exist.qty);
-    if (exist.qty > 0) {
-      setCart(cart.filter((item) => item.id !== product.id));
-    }
-  };
-  const decrement = (product) => {
-    const exist = cart.find((item) => item.id === product.id);
-    setCart(
-      cart.map((item) => {
-        if (item.id === product.id) {
-          return { ...exist, qty: exist.qty > 1 ? exist.qty - 1 : exist.qty };
-        } else {
-          return item;
-        }
-      })
-    );
-  };
-  const TotalPrice = cart
-    .reduce((price, item) => price + item.qty * item.price, 0)
-    .toFixed(2);
+  useEffect(() => {
+    dispatch(fetchAllcarts(user.uid));
+  }, [dispatch, user]);
   return (
     <div className="md:px-14 md:py-10 w-full">
-      {cart.length === 0 && (
+      {carts.length === 0 && (
         <div className="w-full flex items-center flex-col py-5">
           <h1 className="text-9xl text-neutral-500">
             <icons.GiShoppingCart />
@@ -57,12 +42,12 @@ const Cart = ({ cart, setCart }) => {
         </div>
       )}
       <div className="max-w-full md:px-8 py-5 flex gap-3 flex-col">
-        {cart.length !== 0 && (
+        {carts.length !== 0 && (
           <h2 className="text-blue-500 uppercase mb-4 text-xl md:text-4xl font-bold flex justify-center gap-3">
             <icons.GiShoppingCart /> Your cart
           </h2>
         )}
-        {cart.map((item) => (
+        {carts.map((item) => (
           <div
             key={item.id}
             className="md:px-8 px-3 py-5 flex bg-blue-50 gap-3 md:gap-16 rounded-md relative"
@@ -79,14 +64,18 @@ const Cart = ({ cart, setCart }) => {
                 <h4 className="uppercase text-neutral-500 font-normal text-sm md:text-lg">
                   {item.category}
                 </h4>
-                <h3 className="mt-3 text-black text-lg md:text-2xl">{item.title}</h3>
+                <h3 className="mt-3 text-black text-lg md:text-2xl">
+                  {item.title}
+                </h3>
                 <p className="mt-2 text-blue-500 text-lg">
                   Price: ${item.price}
                 </p>
                 <div className="mt-3 flex">
                   <button
                     className="px-3 py-3 text-blue-500"
-                    onClick={() => increment(item)}
+                    onClick={() =>
+                      dispatch(increaseQTY({ uid: user.uid, item }))
+                    }
                   >
                     <icons.FaPlus />
                   </button>
@@ -97,7 +86,9 @@ const Cart = ({ cart, setCart }) => {
                   />
                   <button
                     className="px-3 py-3 text-blue-500"
-                    onClick={() => decrement(item)}
+                    onClick={() =>
+                      dispatch(decreaseQTY({ uid: user.uid, item }))
+                    }
                   >
                     <icons.FaMinus />
                   </button>
@@ -109,7 +100,9 @@ const Cart = ({ cart, setCart }) => {
               <div className="absolute top-5 right-5">
                 <button
                   className="text-neutral-900 hover:text-red-700 font-bold"
-                  onClick={() => remove(item)}
+                  onClick={() =>
+                    dispatch(deleteFromCart({ uid: user.uid, item }))
+                  }
                 >
                   <icons.RxCross1 />
                 </button>
@@ -118,12 +111,15 @@ const Cart = ({ cart, setCart }) => {
           </div>
         ))}
       </div>
-      {cart.length > 0 && (
+      {carts.length > 0 && (
         <div className="flex flex-col items-center md:mb-0 mb-5">
           <h2 className="mt-8 text-center font-bold uppercase text-2xl text-neutral-700">
-            Total Price: ${TotalPrice}
+            Total Price: ${total}
           </h2>
-          <button className="mt-10 px-16 py-5 bg-black hover:bg-blue-500 text-white text-xl font-semibold rounded-md">
+          <button
+            onClick={checkout}
+            className="mt-10 px-16 py-5 bg-black hover:bg-blue-500 text-white text-xl font-semibold rounded-md"
+          >
             Checkout
           </button>
         </div>

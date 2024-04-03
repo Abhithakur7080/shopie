@@ -1,35 +1,34 @@
-import { useNavigate } from "react-router-dom";
 import { productData, icons, truncktext, titleCase } from "../../assets";
-import { useFirebase } from "../../config/firebaseinit";
-import ProductDetail from "../details/ProductDetail";
+//product details view
+import { ProductDetail } from "../details/ProductDetail";
+// get user info
+import { useAuthContext } from "../../redux/AuthProvider";
+// use reducer
+import { useDispatch, useSelector } from "react-redux";
+// use product reducer
+import {
+  productSelector,
+  setProductDetails,
+} from "../../redux/Reducer/ProductReducer";
+//handle add to cart use
+import { addToCart } from "../../redux/Reducer/cartReducer";
 
-const Products = ({
-  detail,
-  setDetail,
-  viewDetail,
-  open,
-  setOpen,
-  addToCart,
-}) => {
-  const { user } = useFirebase();
-  const navigate = useNavigate();
+const Products = () => {
+  const { user } = useAuthContext();
+  const { productDetails } = useSelector(productSelector);
+  const dispatch = useDispatch();
   return (
     <>
-      {open && (
-        <ProductDetail
-          detail={detail}
-          setDetail={setDetail}
-          open={open}
-          setOpen={setOpen}
-        />
-      )}
+    {/* details */}
+      {productDetails && <ProductDetail />}
       <div className="px-10 py-8 w-full bg-blue-50">
         <h2 className="text-2xl text-black font-bold">Top Products</h2>
-        <div className="mt-5 max-w-full flex justify-start flex-wrap gap-4">
+        <div className="mt-5 max-w-full flex justify-center md:justify-start flex-wrap gap-4">
+          {/* default products */}
           {productData.map((item) => (
             <div
               key={item.id}
-              className="px-5 md:py-5 overflow-hidden w-[147px] h-[400px] md:w-[280px] md:h-[360px] shadow-md hover:shadow-xl group rounded-md bg-white"
+              className="px-5 md:py-5 overflow-hidden w-5/6 md:w-[280px] md:h-[360px] shadow-md hover:shadow-xl group rounded-md bg-white"
             >
               <div className="border-b-2 relative py-8 h-44">
                 <img
@@ -40,21 +39,20 @@ const Products = ({
                 <div className="absolute top-1 -right-16 transition-all duration-1000 group-hover:-right-2 z-10">
                   {user ? (
                     <li
-                      onClick={() => addToCart(item)}
+                      onClick={() =>
+                        dispatch(addToCart({ uid: user.uid, item }))
+                      }
                       className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
                     >
                       <icons.AiOutlineShoppingCart />
                     </li>
                   ) : (
-                    <li
-                      onClick={() => navigate("/cart")}
-                      className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
-                    >
+                    <li className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md">
                       <icons.AiOutlineShoppingCart />
                     </li>
                   )}
                   <li
-                    onClick={() => viewDetail(item)}
+                    onClick={() => dispatch(setProductDetails(item))}
                     className="list-none px-3 py-3 rounded-md text-green-700 cursor-pointer transition-all duration-300 hover:bg-green-700 hover:text-white shadow-md"
                   >
                     <icons.BsEye />

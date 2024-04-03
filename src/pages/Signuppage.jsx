@@ -5,7 +5,11 @@ import Logo from "../components/form/Logo";
 import Button from "../components/form/Button";
 import { Link } from "react-router-dom";
 import GoogleSignInButton from "../components/form/GoogleSignInButton";
-import { useFirebase } from "../config/firebaseinit";
+import {
+  useAuth,
+  useFirestore,
+  useRealtimeDatabase,
+} from "../config/firebaseinit";
 import toast from "react-hot-toast";
 
 const Signuppage = () => {
@@ -26,7 +30,9 @@ const Signuppage = () => {
     setUserData({ ...userData, [name]: value });
   };
   //firebase hooks
-  const firebase = useFirebase();
+  const auth = useAuth();
+  const database = useRealtimeDatabase();
+  const store = useFirestore();
 
   //on signup function
   const handleSubmit = async () => {
@@ -41,6 +47,11 @@ const Signuppage = () => {
       toast.error("Please fill in all required fields.");
       return;
     }
+    if (password.length < 6) {
+      setErrors(["password"]);
+      toast.error("password should be 6 or more character");
+      return;
+    }
     if (userData.password !== userData.confirmPassword) {
       setErrors(["password", "confirmPassword"]);
       toast.error("password not matched");
@@ -50,31 +61,33 @@ const Signuppage = () => {
       toast.error("please accept terms and conditions.");
       return;
     }
-    //sign up process
-    const { user } = await firebase.signupUserWithEmailAndPassword(
-      userData.email,
-      userData.password
-    );
-    //update to realtime database
-    await firebase.putData("users/" + user.uid, {
-      fullname: userData.fullname,
-      email: userData.email,
-      phone: userData.phone,
-    });
-    //update to authentication profile
-    await firebase.updateAuthenticatedUserData({
-      displayName: userData.fullname,
-    });
-    const updateData = {
-      displayName: userData.fullname,
-      email: userData.email,
-      phoneNumber: userData.phone,
-      role: "user",
-    };
-    //update data to cloud firestore also
-    await firebase.setDataToFirestoreRef("users", user.uid, updateData);
-    //at last all errors should be empty
-    setErrors([]);
+    try {
+      //sign up process
+      const { user } = await auth.signupUserWithEmailAndPassword(
+        userData.email,
+        userData.password
+      );
+      //update to realtime database
+      await database.putData("users/" + user.uid, {
+        fullname: userData.fullname,
+        email: userData.email,
+        phone: userData.phone,
+      });
+      //update to authentication profile
+      await store.updateAuthenticatedUserData({
+        displayName: userData.fullname,
+      });
+      const updateData = {
+        displayName: userData.fullname,
+        email: userData.email,
+        phoneNumber: userData.phone,
+        role: "user",
+      };
+      //update data to cloud firestore also
+      await store.setDataToFirestoreRef("users", user.uid, updateData);
+      //at last all errors should be empty
+      setErrors([]);
+    } catch (error) {}
   };
   return (
     <div className="w-screen h-fit">
@@ -158,7 +171,7 @@ const Signuppage = () => {
             <p className="mx-4 text-gray-500">OR</p>
             <hr className="w-1/4 border-gray-300" />
           </div>
-          <GoogleSignInButton onClick={firebase.signInWithGoogle} />
+          <GoogleSignInButton onClick={auth.signInWithGoogle} />
         </form>
         <div className="hidden md:block md:w-1/2 slide-left">
           <img

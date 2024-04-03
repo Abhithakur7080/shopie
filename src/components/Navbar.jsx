@@ -6,12 +6,22 @@ import { Link } from "react-router-dom";
 
 //import react hooks
 import { useEffect, useState } from "react";
-import { useFirebase } from "../config/firebaseinit";
+import { useAuth } from "../config/firebaseinit";
+import { useAuthContext } from "../redux/AuthProvider";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  productSelector,
+  searchItems,
+  setProductDetails,
+} from "../redux/Reducer/ProductReducer";
 
-const Navbar = ({ handleSearch }) => {
+const Navbar = () => {
   const [search, setSearch] = useState("");
   const [isMenuHidden, setIsMenuHidden] = useState(false);
-  const { user, logoutUser } = useFirebase();
+  const { user } = useAuthContext();
+  const auth = useAuth();
+  const dispatch = useDispatch();
+  const { filteredProducts, searchbox } = useSelector(productSelector);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,24 +65,43 @@ const Navbar = ({ handleSearch }) => {
             </div>
           </Link>
           {/* search block */}
-          <div className="hidden md:w-1/3 md:flex border-4 border-blue-500">
+          <div className="hidden md:w-1/3 md:flex border-4 border-blue-500 relative">
             <input
               type="text"
-              value={search}
               placeholder="search products here...."
               className="w-3/4 py-1 px-5 outline-none"
               autoComplete="off"
+              value={search}
               onChange={(e) => {
+                dispatch(searchItems(e.target.value));
                 setSearch(e.target.value);
-                handleSearch(search);
               }}
             />
             <button
-              onClick={() => handleSearch(search)}
+              onClick={(e) => {
+                dispatch(searchItems(e.target.value));
+                setSearch(e.target.value);
+              }}
               className="py-1 px-2 w-1/4 flex items-center justify-center gap-2 text-xl bg-blue-500 text-white"
             >
               <span className="text-center">Search</span>
             </button>
+            <div className="absolute left-0 right-0 top-12 max-h-60 overflow-hidden bg-white">
+              {searchbox &&
+                filteredProducts.map((item) => (
+                  <p
+                    key={item.id}
+                    className="shadow-md p-2 cursor-pointer"
+                    onClick={() => {
+                      dispatch(setProductDetails(item));
+                      dispatch(searchItems(""));
+                      setSearch("");
+                    }}
+                  >
+                    {item.title}
+                  </p>
+                ))}
+            </div>
           </div>
           {/* icons block */}
           <div className="flex items-center">
@@ -107,34 +136,61 @@ const Navbar = ({ handleSearch }) => {
               >
                 <icons.BsBagCheck />
               </Link>
+              <Link
+                to={"/order"}
+                className="cursor-pointer text-xl text-blue-600"
+              >
+                <icons.FaTruck />
+              </Link>
             </div>
           </div>
         </div>
-        <div className="md:hidden w-4/5 mb-4 mx-auto flex overflow-hidden border-4 border-blue-500">
+        <div className="md:hidden w-4/5 mb-4 mx-auto flex border-4 border-blue-500 relative">
           <input
             type="text"
-            value={search}
             placeholder="search products here...."
             className="flex-1 py-1 px-5 outline-none"
             autoComplete="off"
+            value={search}
             onChange={(e) => {
+              dispatch(searchItems(e.target.value));
               setSearch(e.target.value);
-              handleSearch(search);
             }}
           />
           <button
-            onClick={() => handleSearch(search)}
+            onClick={(e) => {
+              dispatch(searchItems(e.target.value));
+              setSearch(e.target.value);
+            }}
             className="py-1 px-2 flex items-center gap-2 text-xl bg-blue-500 text-white"
           >
             <span>Search</span>
           </button>
+          <div className="absolute left-0 right-0 top-12 max-h-60 bg-white">
+            {searchbox &&
+              filteredProducts.map((item) => (
+                <p
+                  key={item.id}
+                  className="shadow-md p-2 cursor-pointer"
+                  onClick={() => {
+                    dispatch(setProductDetails(item));
+                    dispatch(searchItems(""));
+                    setSearch("");
+                  }}
+                >
+                  {item.title}
+                </p>
+              ))}
+          </div>
         </div>
       </div>
 
       {/* menu bar */}
       <div
         className={`w-full px-8 py-5 shadow-lg fixed top-44 md:top-28 bg-white z-40 ${
-          isMenuHidden ? "-translate-y-full opacity-0" : "transition-all duration-500"
+          isMenuHidden
+            ? "-translate-y-full opacity-0"
+            : "transition-all duration-500"
         }`}
       >
         <div className="flex w-full justify-between">
@@ -177,7 +233,7 @@ const Navbar = ({ handleSearch }) => {
 
           <div className="flex gap-5 mr-5 text-2xl">
             {user ? (
-              <button onClick={logoutUser} className="cursor-pointer">
+              <button onClick={auth.logoutUser} className="cursor-pointer">
                 <icons.CiLogout />
               </button>
             ) : (

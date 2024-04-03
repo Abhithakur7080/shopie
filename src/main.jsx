@@ -4,17 +4,17 @@ import App from "./App.jsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { FirebaseProvider } from "./config/firebaseinit.jsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.js";
+import { AuthContextProvider } from "./redux/AuthProvider.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <FirebaseProvider>
+    <AuthContextProvider>
       <Provider store={store}>
         <App />
         <Toaster />
       </Provider>
-    </FirebaseProvider>
+    </AuthContextProvider>
   </BrowserRouter>
 );

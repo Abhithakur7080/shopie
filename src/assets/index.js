@@ -8,6 +8,8 @@ import cpuHeater from "./images/cpuHeater.png";
 import banner1 from "./images/banner-1.png";
 import banner2 from './images/banner-2.png';
 
+import sold from "./images/sold.png"
+
 import productData from './Products.json'
 
 //import icons
@@ -25,10 +27,10 @@ import { RiFacebookFill } from 'react-icons/ri'
 import { RxCross1 } from 'react-icons/rx'
 
 const categoryImage = [
-  { name: "phone", src: phone, qty: 20 },
-  { name: "watch", src: watch, qty: 40 },
-  { name: "headphone", src: headphone, qty: 30 },
-  { name: "cpu heater", src: cpuHeater, qty: 10 },
+  { name: "phone", src: phone, productname: "Mobile phones" },
+  { name: "watch", src: watch, productname: "watches"},
+  { name: "headphone", src: headphone, productname: "Headphones" },
+  { name: "cpu heater", src: cpuHeater, productname: "Accessories" },
 ];
 
 const icons = {
@@ -97,4 +99,4 @@ const truncktext = (text) => {
   }
 };
 
-export { categoryImage, icons, aboutInfo, titleCase, truncktext, productData, banner1, banner2 };
+export { categoryImage, icons, aboutInfo, titleCase, truncktext, productData, banner1, banner2, sold };

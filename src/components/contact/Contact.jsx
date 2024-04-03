@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { useFirebase } from "../../config/firebaseinit";
+import { useRealtimeDatabase } from "../../config/firebaseinit";
 import { useNavigate } from "react-router-dom";
-import Input from "../form/Input";
 import Input2 from "../form/Input2";
+import { useAuthContext } from "../../redux/AuthProvider";
 
 const Contact = () => {
   const [userData, setUserData] = useState({
@@ -12,7 +12,8 @@ const Contact = () => {
     Subject: "",
     Message: "",
   });
-  const { user, putData } = useFirebase();
+  const database = useRealtimeDatabase();
+  const { user } = useAuthContext()
   const navigate = useNavigate();
   //authenticated settings
   useEffect(() => {
@@ -34,9 +35,14 @@ const Contact = () => {
     let value = e.target.value;
     setUserData({ ...userData, [name]: value });
   };
-  const sendData = ()=>{
-    putData("contact_info/" + user.uid, { displayName: userData.Name, email: userData.Email, subject: userData.Subject, message: userData.Message });
-  }
+  const sendData = () => {
+    database.putData("contact_info/" + user.uid, {
+      displayName: userData.Name,
+      email: userData.Email,
+      subject: userData.Subject,
+      message: userData.Message,
+    });
+  };
   return (
     <div className="px-10 py-8 w-full">
       <div>

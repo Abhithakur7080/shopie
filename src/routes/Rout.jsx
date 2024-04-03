@@ -1,62 +1,48 @@
 import { Routes, Route } from "react-router-dom";
+//all pages
 import Homepage from "../pages/Homepage";
 import Detail from "../pages/Detail";
-import Cartpage from '../pages/Cartpage'
-import Contactpage from '../pages/Contactpage'
+import Cartpage from "../pages/Cartpage";
+import Contactpage from "../pages/Contactpage";
 import Aboutpage from "../pages/Aboutpage";
 import Loginpage from "../pages/Loginpage";
 import Signuppage from "../pages/Signuppage";
+import Orderpage from "../pages/Orderpage";
+import Errorpage from "../pages/Errorpage";
+//protected routes
+import ProtectedRoute from "../components/ProtectedRoute";
 
-const Rout = ({
-  products,
-  setProducts,
-  handleCatagory,
-  open,
-  setOpen,
-  detail,
-  setDetail,
-  viewDetail,
-  cart,
-  setCart,
-  addToCart,
-}) => {
+const Rout = () => {
   return (
-    <div className="mt-60 md:mt-52">
+    <div className="mt-60 md:mt-52 relative">
+      {/* all the routes defined for the app */}
       <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/products" element={<Detail />} />
+        {/* here two protected routes */}
         <Route
-          path="/"
+          path={"/cart"}
           element={
-            <Homepage
-              open={open}
-              setOpen={setOpen}
-              detail={detail}
-              setDetail={setDetail}
-              viewDetail={viewDetail}
-              addToCart={addToCart}
-            />
+            <ProtectedRoute>
+              <Cartpage />
+            </ProtectedRoute>
           }
         />
         <Route
-          path="/products"
+          path={"/order"}
           element={
-            <Detail
-              products={products}
-              setProducts={setProducts}
-              handleCatagory={handleCatagory}
-              open={open}
-              setOpen={setOpen}
-              detail={detail}
-              setDetail={setDetail}
-              viewDetail={viewDetail}
-              addToCart={addToCart}
-            />
+            <ProtectedRoute>
+              <Orderpage />
+            </ProtectedRoute>
           }
         />
-        <Route path={'/cart'} element={<Cartpage cart={cart} setCart={setCart}/>}/>
-        <Route path={'/contact'} element={<Contactpage/>}/>
-        <Route path={'/about'} element={<Aboutpage/>}/>
-        <Route path={'/login'} element={<Loginpage/>}/>
-        <Route path={'/signup'} element={<Signuppage/>}/>
+        {/* about or some information */}
+        <Route path={"/contact"} element={<Contactpage />} />
+        <Route path={"/about"} element={<Aboutpage />} />
+        <Route path={"/login"} element={<Loginpage />} />
+        <Route path={"/signup"} element={<Signuppage />} />
+        {/* error handling */}
+        <Route path={"*"} element={<Errorpage />} />
       </Routes>
     </div>
   );

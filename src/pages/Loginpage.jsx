@@ -5,7 +5,7 @@ import Logo from "../components/form/Logo";
 import Button from "../components/form/Button";
 import { Link } from "react-router-dom";
 import GoogleSignInButton from "../components/form/GoogleSignInButton";
-import { useFirebase } from "../config/firebaseinit";
+import { useAuth } from "../config/firebaseinit";
 
 const Loginpage = () => {
   //create initial data
@@ -20,7 +20,7 @@ const Loginpage = () => {
     setUserData({ ...userData, [name]: value });
   };
   const [errors, setErrors] = useState([]);
-  const firebase = useFirebase();
+  const auth = useAuth();
   //submit data
   const handleSubmit = async () => {
     let newErrors = [];
@@ -31,7 +31,7 @@ const Loginpage = () => {
       toast.error("Please fill in all required fields.");
       return;
     }
-    await firebase.loginUserWithEmailAndPassword(
+    await auth.loginUserWithEmailAndPassword(
       userData.email,
       userData.password
     );
@@ -84,7 +84,7 @@ const Loginpage = () => {
             <p className="mx-4 text-gray-500">OR</p>
             <hr className="w-1/4 border-gray-300" />
           </div>
-          <GoogleSignInButton onClick={firebase.signInWithGoogle} />
+          <GoogleSignInButton onClick={auth.signInWithGoogle} />
         </form>
         <div className="hidden md:block md:w-1/2 slide-left">
           <img
