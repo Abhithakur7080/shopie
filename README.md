@@ -1,4 +1,5 @@
-# shopie
+<h1 align="center" style="font-size: 36px;">SHOPIE</h1>
+
 # Welcome to shopie!
 
 This project is built using React.js, Redux-Toolkit, Context API, Firebase, and Tailwind CSS to provide users with a seamless shopping experience.
