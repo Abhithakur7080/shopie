@@ -23,8 +23,8 @@ This project is built using React.js, Redux-Toolkit, Context API, Firebase, and 
 - Tailwind CSS
 
 ## Screenshots
-![Homepage-1](https://github.com/Abhithakur7080/shopie/assets/119639453/42ea0ca2-b856-439e-80b1-0bf27fd7b829)
-![homepage-2](https://github.com/Abhithakur7080/shopie/assets/119639453/89eb4b94-02e4-4d3e-9d73-0d95ebc76dfd)
+![Homepage-1](https://github.com/Abhithakur7080/shopie/assets/119639453/58d731ef-b8ba-4cbc-8f76-c331040dc928)
+![Homepage-2](https://github.com/Abhithakur7080/shopie/assets/119639453/89eb4b94-02e4-4d3e-9d73-0d95ebc76dfd)
 ![Search Query](https://github.com/Abhithakur7080/shopie/assets/119639453/01713fae-fd6c-4216-ad8f-3f243ba8a74d)
 ![Login](https://github.com/Abhithakur7080/shopie/assets/119639453/5ccf62eb-0b80-46db-8743-a1a5e16c2962)
 ![Login error](https://github.com/Abhithakur7080/shopie/assets/119639453/ad11b435-9a7b-44b1-93b0-b74c94fe8c06)
