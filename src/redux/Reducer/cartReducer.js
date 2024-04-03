@@ -125,7 +125,7 @@ const cartSlice = createSlice({
     setTotal: (state, action) => {
       state.total = state.carts
         .reduce((price, item) => price + item.qty * item.price, 0)
-        .toLocaleString('en-IN');
+        .toFixed(2);
     },
   },
 });

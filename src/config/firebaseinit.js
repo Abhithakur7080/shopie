@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   signOut,
+  signInWithPopup,
 } from "firebase/auth";
 import {
   getDatabase,
@@ -77,8 +78,14 @@ export const useAuth = () => {
   };
 
   const signInWithGoogle = async () => {
-    const googleProvider = new GoogleAuthProvider();
-    await signInWithRedirect(firebaseAuth, googleProvider);
+    try {
+      const googleProvider = new GoogleAuthProvider();
+      return await signInWithPopup(firebaseAuth, googleProvider);
+    } catch (error) {
+      return error
+    }
+    
+    
   };
 
   const logoutUser = async () => {
@@ -139,7 +146,8 @@ export const useFirestore = () => {
     if (docSnap.exists()) {
       return docSnap.data();
     } else {
-      return "Document doesn't exist!";
+      // return "Document doesn't exist!";
+      return null;
     }
   };
 

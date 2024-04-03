@@ -5,7 +5,7 @@ import Logo from "../components/form/Logo";
 import Button from "../components/form/Button";
 import { Link } from "react-router-dom";
 import GoogleSignInButton from "../components/form/GoogleSignInButton";
-import { useAuth } from "../config/firebaseinit";
+import { useAuth, useFirestore, useRealtimeDatabase } from "../config/firebaseinit";
 
 const Loginpage = () => {
   //create initial data
@@ -21,21 +21,50 @@ const Loginpage = () => {
   };
   const [errors, setErrors] = useState([]);
   const auth = useAuth();
+  const database = useRealtimeDatabase();
+  const store = useFirestore();
   //submit data
   const handleSubmit = async () => {
     let newErrors = [];
-    if (!userData.email) newErrors.push("email");
+    if (!userData.email || !userData.email.includes("@"))
+      newErrors.push("email");
     if (!userData.password) newErrors.push("password");
     if (newErrors.length > 0) {
       setErrors(newErrors);
       toast.error("Please fill in all required fields.");
       return;
     }
-    await auth.loginUserWithEmailAndPassword(
-      userData.email,
-      userData.password
-    );
+    await auth.loginUserWithEmailAndPassword(userData.email, userData.password);
     setErrors([]);
+  };
+  const googleLogin = async () => {
+    const { user } = await auth.signInWithGoogle();
+    const isExistCart = await store.getADocsFromFirestore("carts", user.uid);
+    const isExistOrder = await store.getADocsFromFirestore("orders", user.uid);
+    const isExistUser = await store.getADocsFromFirestore("users", user.uid);
+    if (!isExistCart || !isExistOrder || !isExistUser) {
+      await store.setDataToFirestoreRef("carts", user.uid, {
+        createdAt: new Date().toLocaleDateString(),
+        carts: [],
+      });
+      await store.setDataToFirestoreRef("orders", user.uid, {
+        createdAt: new Date().toLocaleDateString(),
+        orders: [],
+      });
+      const updateData = {
+        displayName: user.displayName,
+        email: user.email,
+        phoneNumber: user.phoneNumber?user.phoneNumber:"",
+      };
+      //update data to cloud firestore also
+      await store.setDataToFirestoreRef("users", user.uid, updateData);
+      //update to realtime database
+      await database.putData("users/" + user.uid, {
+        fullname: user.displayName,
+        email: user.email,
+        phoneNumber: user.phoneNumber?user.phoneNumber:"",
+      });
+    }
   };
   return (
     <div className="w-screen h-fit">
@@ -84,7 +113,7 @@ const Loginpage = () => {
             <p className="mx-4 text-gray-500">OR</p>
             <hr className="w-1/4 border-gray-300" />
           </div>
-          <GoogleSignInButton onClick={auth.signInWithGoogle} />
+          <GoogleSignInButton onClick={googleLogin} />
         </form>
         <div className="hidden md:block md:w-1/2 slide-left">
           <img

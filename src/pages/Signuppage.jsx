@@ -38,7 +38,8 @@ const Signuppage = () => {
   const handleSubmit = async () => {
     let newErrors = [];
     if (!userData.fullname) newErrors.push("fullname");
-    if (!userData.email) newErrors.push("email");
+    if (!userData.email || !userData.email.includes("@"))
+      newErrors.push("email");
     if (!userData.password) newErrors.push("password");
     if (!userData.phone) newErrors.push("phone");
     if (!userData.confirmPassword) newErrors.push("confirmPassword");
@@ -74,20 +75,58 @@ const Signuppage = () => {
         phone: userData.phone,
       });
       //update to authentication profile
-      await store.updateAuthenticatedUserData({
+      await auth.updateAuthenticatedUserData({
         displayName: userData.fullname,
       });
       const updateData = {
         displayName: userData.fullname,
         email: userData.email,
         phoneNumber: userData.phone,
-        role: "user",
       };
       //update data to cloud firestore also
       await store.setDataToFirestoreRef("users", user.uid, updateData);
       //at last all errors should be empty
+      await store.setDataToFirestoreRef("carts", user.uid, {
+        createdAt: new Date().toLocaleDateString(),
+        carts: [],
+      });
+      await store.setDataToFirestoreRef("orders", user.uid, {
+        createdAt: new Date().toLocaleDateString(),
+        orders: [],
+      });
       setErrors([]);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const googleLogin = async () => {
+    const { user } = await auth.signInWithGoogle();
+    const isExistCart = await store.getADocsFromFirestore("carts", user.uid);
+    const isExistOrder = await store.getADocsFromFirestore("orders", user.uid);
+    const isExistUser = await store.getADocsFromFirestore("users", user.uid);
+    if (!isExistCart || !isExistOrder || !isExistUser) {
+      await store.setDataToFirestoreRef("carts", user.uid, {
+        createdAt: new Date().toLocaleDateString(),
+        carts: [],
+      });
+      await store.setDataToFirestoreRef("orders", user.uid, {
+        createdAt: new Date().toLocaleDateString(),
+        orders: [],
+      });
+      const updateData = {
+        displayName: user.displayName,
+        email: user.email,
+        phoneNumber: user.phoneNumber?user.phoneNumber:"",
+      };
+      //update data to cloud firestore also
+      await store.setDataToFirestoreRef("users", user.uid, updateData);
+      //update to realtime database
+      await database.putData("users/" + user.uid, {
+        fullname: user.displayName,
+        email: user.email,
+        phoneNumber: user.phoneNumber?user.phoneNumber:"",
+      });
+    }
   };
   return (
     <div className="w-screen h-fit">
@@ -171,7 +210,7 @@ const Signuppage = () => {
             <p className="mx-4 text-gray-500">OR</p>
             <hr className="w-1/4 border-gray-300" />
           </div>
-          <GoogleSignInButton onClick={auth.signInWithGoogle} />
+          <GoogleSignInButton onClick={googleLogin} />
         </form>
         <div className="hidden md:block md:w-1/2 slide-left">
           <img
