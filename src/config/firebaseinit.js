@@ -80,7 +80,7 @@ export const useAuth = () => {
   const signInWithGoogle = async () => {
     try {
       const googleProvider = new GoogleAuthProvider();
-      return await signInWithPopup(firebaseAuth, googleProvider);
+      return await signInWithRedirect(firebaseAuth, googleProvider);
     } catch (error) {
       return error
     }

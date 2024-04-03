@@ -21,7 +21,7 @@ const Order = () => {
       {orders.length === 0 && (
         <div className="w-full flex items-center flex-col py-5">
           <h1 className="text-9xl text-neutral-500 rotate-180">
-            <icons.FaTruck />
+            <icons.FaTruck className="transform scale-y-[-1] text-blue-400" />
           </h1>
           <h2 className="text-lg font-normal">Your aren't any order yet.</h2>
           <Link
