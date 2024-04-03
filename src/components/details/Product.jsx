@@ -70,14 +70,14 @@ const Product = () => {
         {productDetails && <ProductDetail />}
         <div className="px-10 py-8 w-full bg-blue-50">
           <h2 className="text-2xl text-black font-bold">Top Products</h2>
-          <div className="mt-5 max-w-full flex justify-center md:justify-start flex-wrap gap-4">
+          <div className="mt-5 max-w-full flex justify-center md:justify-between flex-wrap gap-4">
             {((categoryFlag && filteredProducts.length) > 0
               ? filteredProducts
               : productData
             ).map((item) => (
               <div
                 key={item.id}
-                className="px-5 md:py-5 overflow-hidden w-5/6 md:w-[280px] md:h-[360px] shadow-md hover:shadow-xl group rounded-md bg-white"
+                className="px-5 md:py-5 overflow-hidden w-5/6 h-fit md:w-[280px] md:h-[360px] shadow-md hover:shadow-xl group rounded-md bg-white"
               >
                 <div className="border-b-2 relative py-8 h-44">
                   <img
@@ -96,7 +96,9 @@ const Product = () => {
                         <icons.AiOutlineShoppingCart />
                       </li>
                     ) : (
-                      <li className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md">
+                      <li onClick={() =>
+                        dispatch(addToCart({ uid: null, item }))
+                      } className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md">
                         <icons.AiOutlineShoppingCart />
                       </li>
                     )}
@@ -118,7 +120,7 @@ const Product = () => {
                   <h3 className="font-bold text-lg group-hover:text-blue-500">
                     {truncktext(item.title)}
                   </h3>
-                  <h4 className="mt-2 text-xl font-semibold text-blue-500 flex items-center">
+                  <h4 className="mt-2 mb-2 md:mb-0 text-xl font-semibold text-blue-500 flex items-center">
                     <icons.BsCurrencyDollar />
                     {item.price}
                   </h4>

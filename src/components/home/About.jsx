@@ -2,7 +2,7 @@ import { aboutInfo } from "../../assets";
 
 const About = () => {
   return (
-    <div className="px-10 py-8 md:px-12 md:py-10 w-full">
+    <div className="px-6 py-8 md:px-12 md:py-10 w-full">
       <div className="max-w-full flex flex-wrap gap-3 justify-between">
         {aboutInfo.map(({ Icon, text, subText }) => (
           <div

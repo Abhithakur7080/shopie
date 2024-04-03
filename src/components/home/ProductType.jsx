@@ -2,7 +2,7 @@ import { categoryImage } from "../../assets";
 
 const ProductType = () => {
   return (
-    <div className="py-8 px-10 w-full">
+    <div className="py-8 md:px-10 px-6 w-full">
       <div className="max-w-full flex justify-between gap-3 flex-wrap">
         {/* all default catagories map */}
         {categoryImage.map(({ name, src, productname }) => (

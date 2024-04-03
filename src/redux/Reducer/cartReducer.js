@@ -23,7 +23,7 @@ export const addToCart = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const { uid, item } = data;
-
+      console.log(uid);
       if (uid) {
         let userCarts = thunkAPI.getState().cart.carts;
         let itemExists = userCarts.find((product) => product.id === item.id);
@@ -34,6 +34,9 @@ export const addToCart = createAsyncThunk(
         } else {
           thunkAPI.dispatch(increaseQTY({ uid, item }));
         }
+      } else {
+        console.log("object");
+        toast.error("please login or register first!")
       }
     } catch (error) {
       console.log(error);

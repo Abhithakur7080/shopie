@@ -27,6 +27,7 @@ const Rout = () => {
               <Cartpage />
             </ProtectedRoute>
           }
+          errorElement={<Errorpage />}
         />
         <Route
           path={"/order"}
@@ -35,6 +36,7 @@ const Rout = () => {
               <Orderpage />
             </ProtectedRoute>
           }
+          errorElement={<Errorpage />}
         />
         {/* about or some information */}
         <Route path={"/contact"} element={<Contactpage />} />
@@ -42,7 +44,11 @@ const Rout = () => {
         <Route path={"/login"} element={<Loginpage />} />
         <Route path={"/signup"} element={<Signuppage />} />
         {/* error handling */}
-        <Route path={"*"} element={<Errorpage />} />
+        <Route
+          path={"*"}
+          errorElement={<Errorpage />}
+          element={<Errorpage />}
+        />
       </Routes>
     </div>
   );
