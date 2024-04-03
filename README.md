@@ -37,7 +37,7 @@ This project is built using React.js, Redux-Toolkit, Context API, Firebase, and 
 ## Installation
 To run this project locally, follow these steps:
 1. Clone the repository: `git clone https://github.com/Abhithakur7080/shopie`
-2. Navigate to the project directory: `cd shopie-`
+2. Navigate to the project directory: `cd shopie`
 3. Install dependencies: `npm install` or `npm i`
 4. Start the development server: `npm run dev`
 
