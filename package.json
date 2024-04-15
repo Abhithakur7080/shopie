@@ -2,7 +2,7 @@
   "name": "shopie",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://abhithakur7080.github.io/shopie",
+  "homepage": "https://abhithakur7080.github.io/shopie/",
   "type": "module",
   "scripts": {
     "dev": "vite",
