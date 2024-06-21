@@ -114,7 +114,7 @@ const Navbar = () => {
                 <div className="rounded-full text-center mr-2 text-2xl">
                   {user?.photoURL ? (
                     <img
-                      src={user?.photoURL}
+                      src={user.photoURL}
                       alt=""
                       width={30}
                       height={30}

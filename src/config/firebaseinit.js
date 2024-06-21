@@ -82,6 +82,7 @@ export const useAuth = () => {
       const googleProvider = new GoogleAuthProvider();
       return await signInWithRedirect(firebaseAuth, googleProvider);
     } catch (error) {
+      console.log(error);
       return error
     }
     
