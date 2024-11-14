@@ -9,11 +9,24 @@ import {
   setProductDetails,
 } from "../../redux/Reducer/ProductReducer";
 import { addToCart } from "../../redux/Reducer/cartReducer";
+import { useEffect } from "react";
 const Product = () => {
   const dispatch = useDispatch();
   const { user } = useAuthContext();
   const { productDetails, categoryFlag, filteredProducts } =
     useSelector(productSelector);
+
+    useEffect(() => {
+      if (productDetails) {
+        document.body.style.overflow = "hidden"; // Disable scrolling
+      } else {
+        document.body.style.overflow = "auto"; // Re-enable scrolling
+      }
+      // Clean up the effect by resetting overflow when the component unmounts or modal closes
+      return () => {
+        document.body.style.overflow = "auto";
+      };
+    }, [productDetails]);
   return (
     <>
       <div className="px-2 md:px-10 py-10 w-full">
