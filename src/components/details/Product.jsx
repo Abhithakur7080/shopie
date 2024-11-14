@@ -1,32 +1,47 @@
+import { useRef, useEffect } from "react";
 import { resetCatagory, setCatagory } from "../../redux/Reducer/ProductReducer";
 import { Banner1 } from "../home";
 import { productData, icons, truncktext, titleCase } from "../../assets";
 import { ProductDetail } from "../details/ProductDetail";
 import { useAuthContext } from "../../redux/AuthProvider";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  productSelector,
-  setProductDetails,
-} from "../../redux/Reducer/ProductReducer";
+import { productSelector, setProductDetails } from "../../redux/Reducer/ProductReducer";
 import { addToCart } from "../../redux/Reducer/cartReducer";
-import { useEffect } from "react";
+
 const Product = () => {
   const dispatch = useDispatch();
   const { user } = useAuthContext();
-  const { productDetails, categoryFlag, filteredProducts } =
-    useSelector(productSelector);
+  const { productDetails, categoryFlag, filteredProducts } = useSelector(productSelector);
 
-    useEffect(() => {
-      if (productDetails) {
-        document.body.style.overflow = "hidden"; // Disable scrolling
-      } else {
-        document.body.style.overflow = "auto"; // Re-enable scrolling
-      }
-      // Clean up the effect by resetting overflow when the component unmounts or modal closes
-      return () => {
-        document.body.style.overflow = "auto";
-      };
-    }, [productDetails]);
+  // Create a ref for the product list section
+  const productListRef = useRef(null);
+
+  // Navbar height offset (e.g., 50px)
+  const navbarHeight = 100;
+
+  // Scroll to the product list section when category is clicked
+  const handleCategoryClick = (category) => {
+    dispatch(setCatagory(category)); // Set the category in Redux
+
+    // If the product list section exists, scroll to it with offset
+    if (productListRef.current) {
+      const position = productListRef.current.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+      window.scrollTo({ top: position, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    if (productDetails) {
+      document.body.style.overflow = "hidden"; // Disable scrolling
+    } else {
+      document.body.style.overflow = "auto"; // Re-enable scrolling
+    }
+    // Clean up the effect by resetting overflow when the component unmounts or modal closes
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [productDetails]);
+
   return (
     <>
       <div className="px-2 md:px-10 py-10 w-full">
@@ -40,30 +55,28 @@ const Product = () => {
             </p>
             <div className="mt-5 max-w-full flex flex-col md:flex-row flex-wrap">
               <div className="py-5">
-                <h3 className="font-bold text-neutral-800 uppercase">
-                  Catagories
-                </h3>
+                <h3 className="font-bold text-neutral-800 uppercase">Categories</h3>
                 <ul className="mt-3 flex md:block flex-wrap gap-4 list-none">
                   <li
-                    onClick={() => dispatch(setCatagory("men's clothing"))}
+                    onClick={() => handleCategoryClick("men's clothing")}
                     className="flex items-center text-neutral-900 mt-5 gap-3 cursor-pointer hover:text-blue-600"
                   >
                     <icons.FcBusinessman /> Men's Clothing
                   </li>
                   <li
-                    onClick={() => dispatch(setCatagory("women's clothing"))}
+                    onClick={() => handleCategoryClick("women's clothing")}
                     className="flex items-center text-neutral-900 mt-5 gap-3 cursor-pointer hover:text-blue-600"
                   >
                     <icons.FcBusinesswoman /> Women's Clothing
                   </li>
                   <li
-                    onClick={() => dispatch(setCatagory("jewelery"))}
+                    onClick={() => handleCategoryClick("jewelery")}
                     className="flex items-center text-neutral-900 mt-5 gap-3 cursor-pointer hover:text-blue-600"
                   >
-                    <icons.GiJewelCrown className="text-yellow-600" /> Jewelery
+                    <icons.GiJewelCrown className="text-yellow-600" /> Jewelry
                   </li>
                   <li
-                    onClick={() => dispatch(setCatagory("electronics"))}
+                    onClick={() => handleCategoryClick("electronics")}
                     className="flex items-center text-neutral-900 mt-5 gap-3 cursor-pointer hover:text-blue-600"
                   >
                     <icons.FcCamcorderPro /> Electronics
@@ -81,7 +94,7 @@ const Product = () => {
           <Banner1 />
         </div>
         {productDetails && <ProductDetail />}
-        <div className="px-10 py-8 w-full bg-blue-50">
+        <div className="px-10 py-8 w-full bg-blue-50" ref={productListRef}>
           <h2 className="text-2xl text-black font-bold">Top Products</h2>
           <div className="mt-5 max-w-full flex justify-center md:justify-between flex-wrap gap-4">
             {((categoryFlag && filteredProducts.length) > 0
@@ -109,9 +122,12 @@ const Product = () => {
                         <icons.AiOutlineShoppingCart />
                       </li>
                     ) : (
-                      <li onClick={() =>
-                        dispatch(addToCart({ uid: null, item }))
-                      } className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md">
+                      <li
+                        onClick={() =>
+                          dispatch(addToCart({ uid: null, item }))
+                        }
+                        className="list-none px-3 py-3 rounded-md text-blue-700 cursor-pointer transition-all duration-300 hover:bg-blue-700 hover:text-white shadow-md"
+                      >
                         <icons.AiOutlineShoppingCart />
                       </li>
                     )}
